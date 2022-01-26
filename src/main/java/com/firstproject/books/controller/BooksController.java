@@ -1,7 +1,7 @@
 package com.firstproject.books.controller;
 
-import com.firstproject.books.model.Books;
-import com.firstproject.books.repository.BooksRepository;
+import com.firstproject.books.model.Book;
+import com.firstproject.books.services.BooksServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,40 +12,46 @@ import java.util.Optional;
 public class BooksController {
 
     @Autowired
-    private BooksRepository booksRepo;
+    private BooksServiceImpl booksService;
 
     // get all books
     @GetMapping("/books")
     @ResponseBody
-    public List<Books> getAllBooks(){
-        return booksRepo.findAll();
+    public List<Book> getAllBooks(){
+        return booksService.findAllBooks();
     }
 
     // get book by id
     @GetMapping("/books/{id}")
     @ResponseBody
-    public Optional<Books> getBookById(@PathVariable Long id){
-        return booksRepo.findById(id);
+    public Optional<Book> getBookById(@PathVariable Long id){
+        return booksService.findBookById(id);
     }
 
     // add book to db
     @PostMapping("/books")
-    public Books createBookData(@RequestBody Books books){
-        return booksRepo.save(books);
+    public Book createBookData(@RequestBody Book books){
+        return booksService.createBookData(books);
     }
 
     // update book information
     @PutMapping("/books/{id}")
     @ResponseBody
-    public Books updateBookInfo(@PathVariable Long id, @RequestBody Books updatedBook){
+    public Book updateBookInfo(@PathVariable Long id, @RequestBody Book updatedBook) {
 
-        Books book = booksRepo.getById(id);
-        String bookName = updatedBook.getBookName();
+//        String bookName = updatedBook.getBookName();
         String bookAuthor = updatedBook.getAuthorName();
 
-        book.setBookName(bookName);
-        book.setAuthorName(bookAuthor);
-        return booksRepo.save(book);
+        Optional<Book> book = booksService.findBookById(id);
+
+        Book finalBook = null;
+        if (book.isPresent()) {
+            finalBook = book.get();
+            finalBook.setBookName(updatedBook.getBookName());
+            finalBook.setAuthorName(bookAuthor);
+            finalBook = booksService.createBookData(finalBook);
+        }
+        return finalBook;
     }
 
     // delete book from db
@@ -53,9 +59,8 @@ public class BooksController {
     @ResponseBody
     public String deleteBook(@PathVariable Long id){
 
-        Books book = booksRepo.getById(id);
-        booksRepo.delete(book);
-        return "Book deleted from database";
+        booksService.deleteBook(id);
+        return "Book has been deleted";
     }
 
 }
