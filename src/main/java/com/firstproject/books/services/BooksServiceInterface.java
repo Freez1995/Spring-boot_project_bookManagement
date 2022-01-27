@@ -1,8 +1,9 @@
 package com.firstproject.books.services;
 import com.firstproject.books.model.Book;
+import com.firstproject.books.model.InsertBookResponse;
+import com.firstproject.books.model.UpdateBookResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BooksServiceInterface {
 
@@ -10,10 +11,13 @@ public interface BooksServiceInterface {
     public List<Book> findAllBooks();
 
     // get book by ID
-    public Optional<Book> findBookById(Long id);
+    public Book findBookById(Long id);
 
     // add book to DB
-    public Book createBookData(Book books);
+    public InsertBookResponse insertBookData(Book book);
+
+    // update book
+    public UpdateBookResponse updateBookData(Book book);
 
     // delete book from DB
     public void deleteBook(Long id);
