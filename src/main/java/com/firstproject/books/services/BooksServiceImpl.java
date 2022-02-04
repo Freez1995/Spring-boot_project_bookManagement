@@ -78,11 +78,11 @@ public class BooksServiceImpl implements BooksServiceInterface{
         }
         if (book.getBookName() == null || book.getBookName() == ""){
             bookResponse.setStatus(Status.ERROR);
-            bookResponse.getErrorMessages().add("Book name is empty");
+            bookResponse.getErrorMessages().add("Invalid book name");
         }
         if(book.getAuthorName() == null || book.getAuthorName() == ""){
             bookResponse.setStatus(Status.ERROR);
-            bookResponse.getErrorMessages().add("Book author is empty");
+            bookResponse.getErrorMessages().add("Invalid author name");
         }
         if (bookResponse.getErrorMessages().isEmpty()){
             bookResponse.setStatus(Status.OK);
